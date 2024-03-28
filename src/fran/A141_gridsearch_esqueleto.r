@@ -90,6 +90,7 @@ ArbolesMontecarlo <- function(semillas, param_basicos) {
 
 # Aqui se debe poner la carpeta de la computadora local
 #setwd("~/buckets/b1/") # Establezco el Working Directory
+setwd("~/labo2024v1/src/fran")
 # cargo los datos
 
 # cargo los datos
@@ -114,7 +115,7 @@ tb_grid_search <- data.table( max_depth = integer(),
 
 
 # itero por los loops anidados para cada hiperparametro
-
+l <- 1
 for (vmax_depth in c(4, 6, 8, 10, 12, 14)) {
   for (vmin_split in c(1000, 800, 600, 400, 200, 100, 50, 20, 10)) {
     for (vminbucket in seq(0.1,0.5,0.05)) {
@@ -136,7 +137,8 @@ for (vmax_depth in c(4, 6, 8, 10, 12, 14)) {
         tb_grid_search <- rbindlist(
           list( tb_grid_search,
                 list( vmax_depth, vmin_split,vminbucket,vcp, ganancia_promedio) ) )
-        
+        print(l)
+        l <- l+1
       }
     }
   }
