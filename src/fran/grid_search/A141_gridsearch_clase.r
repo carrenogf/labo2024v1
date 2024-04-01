@@ -106,13 +106,12 @@ dataset[, clase_binaria1 := ifelse(clase_ternaria == "BAJA+2", "SUMA", "RESTA")]
 # HT  representa  Hiperparameter Tuning
 dir.create("./exp/", showWarnings = FALSE)
 dir.create("./exp/HT2020/", showWarnings = FALSE)
-archivo_salida <- "./exp/HT2020/gridsearch.txt"
+archivo_salida <- "./exp/HT2020/gridsearch_binaria1.txt"
 
 # genero la data.table donde van los resultados del Grid Search
 tb_grid_search <- data.table( max_depth = integer(),
                               min_split = integer(),
                               minbucket = integer(),
-                              cp = double(),
                               ganancia_promedio = numeric() )
 
 
@@ -138,7 +137,7 @@ for (vmax_depth in c( 7, 8, 9, 10)) {
         # agrego a la tabla
         tb_grid_search <- rbindlist(
           list( tb_grid_search,
-                list( vmax_depth, vmin_split,vminbucket,vcp, ganancia_promedio) ) )
+                list( vmax_depth, vmin_split,vminbucket, ganancia_promedio) ) )
         print(l)
         l <- l+1
       
