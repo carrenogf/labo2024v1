@@ -78,7 +78,7 @@ ArbolesMontecarlo <- function(semillas, param_basicos) {
                         semillas, # paso el vector de semillas
                         MoreArgs = list(param_basicos), # aqui paso el segundo parametro
                         SIMPLIFY = FALSE,
-                        mc.cores = 1 # en Windows este valor debe ser 1
+                        mc.cores = 5 # en Windows este valor debe ser 1
   )
   
   ganancia_promedio <- mean(unlist(ganancias))
@@ -90,13 +90,13 @@ ArbolesMontecarlo <- function(semillas, param_basicos) {
 
 # Aqui se debe poner la carpeta de la computadora local
 #setwd("~/buckets/b1/") # Establezco el Working Directory
-#setwd("~/labo2024v1/src/fran")
+setwd("~/labo2024v1/src/fran")
 
 # cargo los datos
 
 # cargo los datos
-#dataset <- fread("https://storage.googleapis.com/open-courses/austral2024-fc72/dataset_pequeno.csv")
-dataset <- fread("./datasets/dataset_pequeno.csv")
+dataset <- fread("https://storage.googleapis.com/open-courses/austral2024-fc72/dataset_pequeno.csv")
+#dataset <- fread("./datasets/dataset_pequeno.csv")
 # trabajo solo con los datos con clase, es decir 202107
 dataset <- dataset[clase_ternaria != ""]
 
@@ -118,9 +118,9 @@ tb_grid_search <- data.table( max_depth = integer(),
 
 # itero por los loops anidados para cada hiperparametro
 l <- 1
-for (vmax_depth in c( 7,8,9)) {
-  for (vmin_split in c(1000)) {
-    for (vminbucket in c(0.05)) {
+for (vmax_depth in c( 7, 8, 9, 10)) {
+  for (vmin_split in c(1000, 800, 600, 400)) {
+    for (vminbucket in seq(0.05,0.5,0.05)) {
 
         # notar como se agrega
         
