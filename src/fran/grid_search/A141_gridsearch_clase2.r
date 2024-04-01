@@ -107,7 +107,7 @@ dataset[, clase_binaria1 := ifelse(clase_ternaria == "BAJA+2", "SUMA", "RESTA")]
 # HT  representa  Hiperparameter Tuning
 dir.create("./exp/", showWarnings = FALSE)
 dir.create("./exp/HT2020/", showWarnings = FALSE)
-archivo_salida <- "./exp/HT2020/gridsearch_binaria1.txt"
+archivo_salida <- "./exp/HT2020/gridsearch_binaria1_2.txt"
 
 # genero la data.table donde van los resultados del Grid Search
 tb_grid_search <- data.table( max_depth = integer(),
@@ -117,16 +117,22 @@ tb_grid_search <- data.table( max_depth = integer(),
 
 
 # itero por los loops anidados para cada hiperparametro
+
+md = c( 7, 8, 9, 10) # max_depeh
+ms =  c(1600,1400,1200,1000, 800, 600, 400) #min_split
+mb = seq(0.05,0.5,0.05) #minbucket
 l <- 1
-for (vmax_depth in c( 7, 8, 9, 10)) {
-  for (vmin_split in c(1000, 800, 600, 400)) {
-    for (vminbucket in seq(0.05,0.5,0.05)) {
+qmodelos <- length(md)*length(ms)*length(mb)
+
+for (vmax_depth in md) {
+  for (vmin_split in ms) {
+    for (vminbucket in mb) {
 
         # notar como se agrega
         
         # vminsplit  minima cantidad de registros en un nodo para hacer el split
         param_basicos <- list(
-          "cp" = -0.3, # complejidad minima
+          "cp" = -0.5, # complejidad minima
           "minsplit" = vmin_split,
           "minbucket" = vminbucket*vmin_split, # minima cantidad de registros en una hoja
           "maxdepth" = vmax_depth
@@ -139,7 +145,7 @@ for (vmax_depth in c( 7, 8, 9, 10)) {
         tb_grid_search <- rbindlist(
           list( tb_grid_search,
                 list( vmax_depth, vmin_split,vminbucket, ganancia_promedio) ) )
-        print(l)
+        print(paste(l," de ",qmodelos))
         l <- l+1
       
     }
