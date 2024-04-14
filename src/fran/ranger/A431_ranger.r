@@ -12,10 +12,10 @@ require("randomForest") # solo se usa para imputar nulos
 # "mtry" = 30, cantidad de variables que evalua para hacer un split
 #  generalmente sqrt(ncol(dtrain))
 param <- list(
-  "num.trees" = 300, # cantidad de arboles
-  "mtry" = 13,
-  "min.node.size" = 50, # tamaño minimo de las hojas
-  "max.depth" = 10 # 0 significa profundidad infinita
+  "num.trees" = 387, # cantidad de arboles
+  "mtry" = 25,
+  "min.node.size" = 457, # tamaño minimo de las hojas
+  "max.depth" = 13 # 0 significa profundidad infinita
 )
 
 #------------------------------------------------------------------------------
@@ -74,8 +74,12 @@ prediccion <- predict(modelo, dapply)
 # Genero la entrega para Kaggle
 entrega <- as.data.table(list(
   "numero_de_cliente" = dapply[, numero_de_cliente],
-  "Predicted" = as.numeric(prediccion$predictions[, "BAJA+2"] > 1 / 40)
+  "Predicted" = as.numeric(prediccion$predictions[, "BAJA+2"] > 1 / 40),
+  "probabilidad" = as.numeric(prediccion$predictions[, "BAJA+2"])
 )) # genero la salida
+
+# ordeno entrega por probabilidad descendente para permitir hacer el corte
+setorder(entrega, -probabilidad)
 
 # creo la carpeta donde va el experimento
 # HT  representa  Hiperparameter Tuning
@@ -83,8 +87,14 @@ dir.create("./exp/", showWarnings = FALSE)
 dir.create("./exp/KA4310/", showWarnings = FALSE)
 archivo_salida <- "./exp/KA4310/KA4310_001.csv"
 
-# genero el archivo para Kaggle
-fwrite(entrega,
-  file = archivo_salida,
-  sep = ","
-)
+# Genera la salida con distintos valores de envios
+cortes <- seq(8000, 12000, by = 500)
+for (envios in cortes) {
+  entrega[, Predicted := 0L]
+  entrega[1:envios, Predicted := 1L]
+  
+  fwrite(entrega[, list(numero_de_cliente, Predicted)],
+         file = paste0('exp/KA4310/KA4310', "_", envios, ".csv"),
+         sep = ","
+  )
+}
