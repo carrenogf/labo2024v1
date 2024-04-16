@@ -35,14 +35,15 @@ columnas_filtradas <- numeric_cols[sapply(numeric_cols, function(col) {
   }
   return(FALSE)
 })]
-sample_columnas <- sample(columnas_filtradas, 2, replace = TRUE)
+sample_columnas <- sample(columnas_filtradas, 100, replace = TRUE)
 combinations <- CJ(sample_columnas, sample_columnas)
 
 
 
-for (i in 1:ncol(combinations)) {
+for (i in 1:nrow(combinations)) {
   col1 <- as.character(combinations[i, 1])
   col2 <- as.character(combinations[i, 2])
+  cat(col1,col2)
   if(col1!=col2){
     try({
   new_col_name <- paste0(col1, "_divided_by_", col2)
@@ -52,11 +53,6 @@ for (i in 1:ncol(combinations)) {
 }
 
 
-print(dataset[1:20,Visa_mlimitecompra])
-
-dataset[,"prop_consumo_visa" := Visa_mconsumospesos/Visa_mlimitecompra]
-
-print(dataset[1:20,prop_consumo_visa])
 # agrego los siguientes canaritos
 for( i in 1:154 ) dataset[ , paste0("canarito", i ) :=  runif( nrow(dataset)) ]
 
@@ -82,6 +78,6 @@ plot(importancia, xlab="variable",
      ylab="Importance", xaxt = "n", pch=20)
 axis(1, at=1:310, labels=names(dataset))
 library(vip)
-vip(modelo,num_features = 30)
+vip(modelo,num_features = 100,height = 100)
 plot(vi(modelo))
 print(vi(modelo),n=100)
