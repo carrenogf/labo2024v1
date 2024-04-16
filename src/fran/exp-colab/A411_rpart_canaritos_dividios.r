@@ -1,0 +1,73 @@
+# limpio la memoria
+rm( list=ls() )  # remove all objects
+gc()             # garbage collection
+
+require("data.table")
+require("rpart")
+require("rpart.plot")
+
+setwd("~/buckets/b1/" )  # establezco la carpeta donde voy a trabajar
+# cargo el dataset
+dataset <- fread( "./datasets/dataset_pequeno.csv")
+
+dir.create("./exp/", showWarnings = FALSE)
+dir.create("./exp/canarios/", showWarnings = FALSE)
+# Establezco el Working Directory DEL EXPERIMENTO
+setwd("./exp/canarios/")
+
+# uso esta semilla para los canaritos
+set.seed(606323)
+
+
+numeric_cols <- names(dataset)[sapply(dataset, is.numeric)]
+
+numeric_cols <- numeric_cols [-which(numeric_cols  == "numero_de_cliente")]
+numeric_cols <- numeric_cols [-which(numeric_cols  == "foto_mes")]
+
+columnas_filtradas <- numeric_cols[sapply(dataset[, numeric_cols, with = FALSE], 
+                                          function(col) min(col, na.rm = FALSE) > 1)]
+
+
+combinations <- CJ(numeric_cols, numeric_cols)
+for (i in 1:nrow(combinations)) {
+  col1 <- combinations[i, V1]
+  col2 <- combinations[i, V2]
+  new_col_name <- paste0(col1, "_divided_by_", col2)
+  dataset[, (new_col_name) := .SD[[col1]] / .SD[[col2]]]
+}
+
+
+print(names(dataset))
+print(dataset[1:20,Visa_mlimitecompra])
+
+dataset[,"prop_consumo_visa" := Visa_mconsumospesos/Visa_mlimitecompra]
+
+print(dataset[1:20,prop_consumo_visa])
+# agrego los siguientes canaritos
+for( i in 1:154 ) dataset[ , paste0("canarito", i ) :=  runif( nrow(dataset)) ]
+
+
+# Usted utilice sus mejores hiperparamatros
+# yo utilizo los encontrados por Elizabeth Murano
+ modelo  <- rpart(formula= "clase_ternaria ~ .",
+               data= dataset[ foto_mes==202107,],
+               model = TRUE,
+               xval = 0,
+               cp = -0.5,
+               minsplit =  600,
+               minbucket = 150,
+               maxdepth = 6)
+
+
+#pdf(file = "./arbol_canaritos_consumo_visa.pdf", width=28, height=4)
+prp(modelo, extra=101, digits=5, branch=1, type=4, varlen=0, faclen=0)
+dev.off()
+importancia <- modelo$variable.importance
+
+plot(importancia, xlab="variable", 
+     ylab="Importance", xaxt = "n", pch=20)
+axis(1, at=1:310, labels=names(dataset))
+library(vip)
+vip(modelo,num_features = 30)
+plot(vi(modelo))
+print(vi(modelo),n=100)
