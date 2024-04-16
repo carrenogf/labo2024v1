@@ -35,20 +35,23 @@ columnas_filtradas <- numeric_cols[sapply(numeric_cols, function(col) {
   }
   return(FALSE)
 })]
-sample_columnas <- sample(columnas_filtradas, 20, replace = TRUE)
+sample_columnas <- sample(columnas_filtradas, 2, replace = TRUE)
 combinations <- CJ(sample_columnas, sample_columnas)
 
 
 
 for (i in 1:ncol(combinations)) {
-  col1 <- selected_combinations[1, i]
-  col2 <- selected_combinations[2, i]
+  col1 <- as.character(combinations[i, 1])
+  col2 <- as.character(combinations[i, 2])
+  if(col1!=col2){
+    try({
   new_col_name <- paste0(col1, "_divided_by_", col2)
-  dataset[, (new_col_name) := get(col1) / get(col2)]
+  dataset[, (new_col_name) := dataset[[col1]] / dataset[[col2]]]
+    })
+  }
 }
 
-1
-print(names(dataset))
+
 print(dataset[1:20,Visa_mlimitecompra])
 
 dataset[,"prop_consumo_visa" := Visa_mconsumospesos/Visa_mlimitecompra]
