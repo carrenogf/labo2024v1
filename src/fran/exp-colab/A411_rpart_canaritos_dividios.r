@@ -24,8 +24,6 @@ numeric_cols <- names(dataset)[sapply(dataset, is.numeric)]
 numeric_cols <- numeric_cols [-which(numeric_cols  == "numero_de_cliente")]
 numeric_cols <- numeric_cols [-which(numeric_cols  == "foto_mes")]
 
-columnas_filtradas <- numeric_cols[sapply(dataset[, numeric_cols, with = FALSE], 
-                                          function(col) min(col) > 1)]
 columnas_filtradas <- numeric_cols[sapply(numeric_cols, function(col) {
   # Verificar si la columna contiene más de dos valores únicos
   if (length(unique(dataset[[col]])) > 2) {
@@ -37,18 +35,19 @@ columnas_filtradas <- numeric_cols[sapply(numeric_cols, function(col) {
   }
   return(FALSE)
 })]
-columnas_filtradas
-combinations <- CJ(columnas_filtradas, columnas_filtradas)
-for (i in 1:nrow(combinations)) {
-  col1 <- combinations[i, 1]
-  col2 <- combinations[i, 2]
-  try({
+sample_columnas <- sample(columnas_filtradas, 20, replace = TRUE)
+combinations <- CJ(sample_columnas, sample_columnas)
+
+
+
+for (i in 1:ncol(combinations)) {
+  col1 <- selected_combinations[1, i]
+  col2 <- selected_combinations[2, i]
   new_col_name <- paste0(col1, "_divided_by_", col2)
-  dataset[, (new_col_name) := dataset$col1 / dataset$col2]
-  })
+  dataset[, (new_col_name) := get(col1) / get(col2)]
 }
 
-
+1
 print(names(dataset))
 print(dataset[1:20,Visa_mlimitecompra])
 
