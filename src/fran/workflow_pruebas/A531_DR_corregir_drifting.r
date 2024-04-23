@@ -131,6 +131,8 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, vmr_mpagominimo := vm_mpagominimo / vm_mlimitecompra]
 
   
+
+  # Aqui debe usted agregar sus propias nuevas variables
   dataset[,activo_corriente := 
             mcuentas_saldo+
             mplazo_fijo_dolares+
@@ -153,8 +155,15 @@ AgregarVariables_IntraMes <- function(dataset) {
             mcomisiones_otras
   ]
   dataset[,liquidez := activo_corriente/pasivo_corriente]
-  # Aqui debe usted agregar sus propias nuevas variables
-
+  dataset[,msaldo_prom_cc := mcuentas_saldo/ccuenta_corriente]
+  dataset[,msaldo_prom_ca := mcuentas_saldo/ccaja_ahorro]
+  dataset[,msaldo_prom := mcuentas_saldo/(ccaja_ahorro + ccuenta_corriente)]
+  dataset[,msaldo_prom_tjdb := mcuentas_saldo/ctarjeta_debito]
+  dataset[,consumo_payroll := (vmr_mconsumospesos + vmr_mconsumosdolares)/mpayroll] 
+  
+  
+  
+  
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
   infinitos <- lapply(
