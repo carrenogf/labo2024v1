@@ -147,7 +147,6 @@ AgregarVariables_IntraMes <- function(dataset) {
             mprestamos_prendarios+
             mprestamos_hipotecarios+
             mcuenta_debitos_automaticos+
-            mtarjeta_visa_debitos_automaticos+
             mttarjeta_master_debitos_automaticos+
             mpagodeservicios+
             mpagomiscuentas+
@@ -173,12 +172,11 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,pprestamos := tprestamos/cprestamos]
   dataset[,cinversiones := cplazo_fijo + cinversion1 + cinversion2]
   dataset[,tinversiones := mplazo_fijo_pesos + mplazo_fijo_dolares + minversion1_pesos + 
-              minversion1_dolares + minversion2_pesos + minversion2_dolares]
-  dataset[,cseguros := cseguros_vida + cseguro_auto + cseguro_vivienda + 
-            c_seguros_accidentes_personales]
+            minversion1_dolares + minversion2]
+  dataset[,cseguros := cseguro_vida + cseguro_auto + cseguro_vivienda + 
+            cseguro_accidentes_personales]
   dataset[,cacred_haberes := cpayroll_trx + cpayroll2_trx]
   dataset[,tacred_haberes := mpayroll + mpayroll2]
-  
   
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
