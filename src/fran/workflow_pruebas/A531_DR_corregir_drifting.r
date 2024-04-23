@@ -133,7 +133,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   
 
   # Aqui debe usted agregar sus propias nuevas variables
-  dataset[,activo_corriente := 
+  dataset[,tactivo_corriente := 
             mcuentas_saldo+
             mplazo_fijo_dolares+
             mplazo_fijo_pesos+
@@ -141,7 +141,7 @@ AgregarVariables_IntraMes <- function(dataset) {
             minversion1_dolares+
             minversion2
   ]
-  dataset[, pasivo_corriente :=
+  dataset[, tpasivo_corriente :=
             vm_mconsumospesos+
             mprestamos_personales+
             mprestamos_prendarios+
@@ -154,14 +154,30 @@ AgregarVariables_IntraMes <- function(dataset) {
             mcomisiones_mantenimiento+
             mcomisiones_otras
   ]
-  dataset[,liquidez := activo_corriente/pasivo_corriente]
-  dataset[,msaldo_prom_cc := mcuentas_saldo/ccuenta_corriente]
-  dataset[,msaldo_prom_ca := mcuentas_saldo/ccaja_ahorro]
-  dataset[,msaldo_prom := mcuentas_saldo/(ccaja_ahorro + ccuenta_corriente)]
-  dataset[,msaldo_prom_tjdb := mcuentas_saldo/ctarjeta_debito]
-  dataset[,consumo_payroll := (vmr_mconsumospesos + vmr_mconsumosdolares)/mpayroll] 
-  
-  
+  dataset[,iliquidez := tactivo_corriente/tpasivo_corriente]
+  dataset[,psaldo_cc := mcuentas_saldo/ccuenta_corriente]
+  dataset[,psaldo_ca := mcuentas_saldo/ccaja_ahorro]
+  dataset[,msaldo_ctas := mcuentas_saldo/(ccaja_ahorro + ccuenta_corriente)]
+  dataset[,isaldo_debito := mcuentas_saldo/ctarjeta_debito]
+  dataset[,iconsumo_payroll := (vmr_mconsumospesos + vmr_mconsumosdolares)/mpayroll] 
+  dataset[,ifidelidad1 := cliente_antiguedad * cliente_edad]
+  dataset[,ipayroll_chq := cpayroll_trx/mcheques_emitidos]
+  dataset[,pcons_trans_m := mtarjeta_master_consumo / ctarjeta_master_transacciones]
+  dataset[,pcons_trans_v := mtarjeta_visa_consumo / ctarjeta_visa_transacciones]
+  dataset[,pcons_trans_vm := (pcons_trans_m+pcons_trans_v)/2]
+  dataset[,irent_prod := mrentabilidad / cproductos]
+  dataset[,tprestamos  := mprestamos_personales+ mprestamos_prendarios +
+            mprestamos_hipotecarios]
+  dataset[,cprestamos := cprestamos_personales+ cprestamos_prendarios +
+            cprestamos_hipotecarios]
+  dataset[,pprestamos := tprestamos/cprestamos]
+  dataset[,cinversiones := cplazo_fijo + cinversion1 + cinversion2]
+  dataset[,tinversiones := mplazo_fijo_pesos + mplazo_fijo_dolares + minversion1_pesos + 
+              minversion1_dolares + minversion2_pesos + minversion2_dolares]
+  dataset[,cseguros := cseguros_vida + cseguro_auto + cseguro_vivienda + 
+            c_seguros_accidentes_personales]
+  dataset[,cacred_haberes := cpayroll_trx + cpayroll2_trx]
+  dataset[,tacred_haberes := mpayroll + mpayroll2]
   
   
   # valvula de seguridad para evitar valores infinitos
