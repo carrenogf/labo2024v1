@@ -15,7 +15,7 @@ envg <- env()
 
 envg$EXPENV <- list()
 envg$EXPENV$exp_dir <- "~/buckets/b1/exp-flow/"
-envg$EXPENV$exp_num <- "0008"
+envg$EXPENV$exp_num <- "0002"
 envg$EXPENV$wf_dir <- "~/buckets/b1/flow/"
 envg$EXPENV$wf_dir_local <- "~/flow/"
 envg$EXPENV$repo_dir <- "~/labo2024v1/"

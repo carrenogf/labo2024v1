@@ -50,7 +50,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   # creo un ctr_quarter que tenga en cuenta cuando
   # los clientes hace 3 menos meses que estan
-  dataset[, ctrx_quarter_normalizado := ctrx_quarter]
+  dataset[, ctrx_quarter_normalizado := as.numeric(ctrx_quarter)]
   dataset[cliente_antiguedad == 1, ctrx_quarter_normalizado := ctrx_quarter * 5]
   dataset[cliente_antiguedad == 2, ctrx_quarter_normalizado := ctrx_quarter * 2]
   dataset[
@@ -272,7 +272,7 @@ AgregarVariables_IntraMes <- function(dataset) {
       "ATENCION, hay", infinitos_qty,
       "valores infinitos en tu dataset. Seran pasados a NA\n"
     )
-    dataset[mapply(is.infinite, dataset)] <<- NA
+    dataset[mapply(is.infinite, dataset)] <- NA
   }
 
 
@@ -292,7 +292,7 @@ AgregarVariables_IntraMes <- function(dataset) {
     )
 
     cat("Si no te gusta la decision, modifica a gusto el programa!\n\n")
-    dataset[mapply(is.nan, dataset)] <<- 0
+    dataset[mapply(is.nan, dataset)] <- 0
   }
 }
 #------------------------------------------------------------------------------
