@@ -15,7 +15,7 @@ envg <- env()
 
 envg$EXPENV <- list()
 envg$EXPENV$exp_dir <- "~/buckets/b1/exp-flow/"
-envg$EXPENV$exp_num <- "0004"
+envg$EXPENV$exp_num <- "0008"
 envg$EXPENV$wf_dir <- "~/buckets/b1/flow/"
 envg$EXPENV$wf_dir_local <- "~/flow/"
 envg$EXPENV$repo_dir <- "~/labo2024v1/"
@@ -105,10 +105,10 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  param_local$meta$script <- "/src/workflow-01/z531_DR_corregir_drifting.r"
+  param_local$meta$script <- "/src/workflow-01/531_DR_corregir_drifting.r"
 
   # No me engraso las manos con Feature Engineering manual
-  param_local$variables_intrames <- FALSE
+  param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
   param_local$metodo <- "rank_cero_fijo"
@@ -347,12 +347,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
   # Ya tengo corrido FE0001 y parto de alli
-  TS_strategy_guantesblancos_202107( paste0("TS",envg$EXPENV$exp_num), paste0("FE",envg$EXPENV$exp_num) )
+  TS_strategy_guantesblancos_202107( paste0("TS",envg$EXPENV$exp_num,"_2"), paste0("FE",envg$EXPENV$exp_num) )
 
-  HT_tuning_guantesblancos( paste0("HT",envg$EXPENV$exp_num), paste0("TS",envg$EXPENV$exp_num))
+  HT_tuning_guantesblancos( paste0("HT",envg$EXPENV$exp_num,"_2"), paste0("TS",envg$EXPENV$exp_num,"_2"))
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( paste0("ZZ",envg$EXPENV$exp_num), c(paste0("HT",envg$EXPENV$exp_num), paste0("TS",envg$EXPENV$exp_num)) )
+  ZZ_final_guantesblancos( paste0("ZZ",envg$EXPENV$exp_num,"_2"), c(paste0("HT",envg$EXPENV$exp_num,"_2"), paste0("TS",envg$EXPENV$exp_num,"_2")) )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
