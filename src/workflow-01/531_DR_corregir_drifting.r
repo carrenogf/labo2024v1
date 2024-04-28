@@ -249,15 +249,34 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,pond_montos := tmontos/sum(dataset$tmontos)]
   dataset[,pond_rentabilidad := trentabilidad_mensual/sum(dataset$trentabilidad_mensual)]
   
-  dataset[,d_trentabilidad_mensual_neg := ifelse( (trentabilidad_mensual) < 0 ,1, 0)]
+  dataset[,d_rentabilidad_mensual_neg := ifelse( (trentabilidad_mensual) < 0 ,1, 0)]
   dataset[,d_iliquidez_negativa := ifelse( (iliquidez) < 0 ,1, 0)]
   dataset[,dca_negativa := ifelse( (mcaja_ahorro) > 0 ,1, 0)]
   dataset[,dcc_negativa := ifelse( (mcuenta_corriente ) > 0 ,1, 0)]
   dataset[,indice_dummy := dca_negativa-dcc_negativa-dcajas_ahorro+dcuenta_corriente+ddebitos_automaticos+
             dpagodeservicios+dpagomiscuentas+dforex+dforex_buy+dforex_sell+dtransferencias_emitidas+duso_atm+
-            dcheques_emitidos+dprestamos+dseguros+d_iliquidez_negativa-d_trentabilidad_mensual_neg]
+            dcheques_emitidos+dprestamos+dseguros+d_iliquidez_negativa-d_rentabilidad_mensual_neg]
   
   
+  
+  dataset[, d_uso_tarjeta_credito := ifelse(ctarjeta_visa_transacciones + ctarjeta_master_transacciones > 0, 1, 0)]
+  dataset[, d_uso_tarjeta_debito := ifelse(ctarjeta_debito_transacciones  > 0, 1, 0)]
+  dataset[, ratio_tarjdebito_tarjcredito := ifelse(ctarjeta_visa_transacciones + ctarjeta_master_transacciones == 0, 
+                                                 ifelse(ctarjeta_debito_transacciones == 0, 0, ctarjeta_debito_transacciones), 
+                                                 round(ctarjeta_debito_transacciones / (ctarjeta_visa_transacciones + ctarjeta_master_transacciones), 2))]
+  dataset[, ratio_visa_consumototal_saldototal := Visa_mconsumototal / Visa_msaldototal ]
+  dataset[, ratio_master_consumototal_saldototal := Master_mconsumototal / Master_msaldototal ]
+  dataset[, t_deuda_tarjetacredito := Visa_msaldototal + Master_msaldototal ]
+  dataset[, d_inversion := ifelse(cplazo_fijo + cinversion1 + cinversion2 > 0, 1, 0)]
+  dataset[, ratio_sucursal_vs_hogar := (ccallcenter_transacciones + chomebanking_transacciones + cmobile_app_trx) / (ccajas_transacciones + ccajas_consultas + ccajas_depositos + ccajas_transacciones + ccajas_otras) ]
+  dataset[,t_transacciones := ctrx_quarter + Master_cconsumos + Visa_cconsumos]
+  dataset[,p_monto_transacciones := tmontos/t_transacciones]
+  dataset[,d_status_0 := as.integer(Master_status == 0 | Visa_status == 0)]
+  dataset[,d_status_6 := as.integer(Master_status == 6 | Visa_status == 6)]
+  dataset[,d_status_7 := as.integer(Master_status == 7 | Visa_status == 7)]
+  dataset[,d_status_9 := as.integer(Master_status == 9 | Visa_status == 9)]
+  dataset[,i_endeudamiento_payroll := tpasivo_corriente/tacred_haberes]
+  dataset[,i_endeudamiento_patrimonio := tpasivo_corriente/(minversion1_pesos + minversion1_dolares + minversion2)]
   
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
