@@ -51,7 +51,7 @@ setwd( envg$EXPENV$wf_dir_local )
 #------------------------------------------------------------------------------
 # cargo la  "libreria" de los experimentos
 
-exp_lib <- paste0( envg$EXPENV$repo_dir,"/exp/workflow-baseline/z590_exp_lib_01.r")
+exp_lib <- paste0( envg$EXPENV$repo_dir,"/src/lib/z590_exp_lib_01.r")
 source( exp_lib )
 
 #------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ DT_incorporar_dataset_default <- function( pmyexp, parch, pserver="local")
   if( -1 == (param_local <- exp_init_datos( pmyexp, parch, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  param_local$meta$script <- "/exp/workflow-baseline/z511_DT_incorporar_dataset.r"
+  param_local$meta$script <- "/src/workflow-baseline/z511_DT_incorporar_dataset.r"
 
   param_local$primarykey <- c("numero_de_cliente", "foto_mes" )
   param_local$entity_id <- c("numero_de_cliente" )
@@ -85,7 +85,7 @@ CA_catastrophe_default <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  param_local$meta$script <- "/exp/workflow-baseline/z521_CA_reparar_dataset.r"
+  param_local$meta$script <- "/src/workflow-baseline/z521_CA_reparar_dataset.r"
 
   # Opciones MachineLearning EstadisticaClasica Ninguno
   param_local$metodo <- "MachineLearning" # MachineLearning EstadisticaClasica Ninguno
@@ -105,7 +105,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  param_local$meta$script <- "/exp/workflow-baseline/z531_DR_corregir_drifting.r"
+  param_local$meta$script <- "/src/workflow-baseline/z531_DR_corregir_drifting.r"
 
   # No me engraso las manos con Feature Engineering manual
   param_local$variables_intrames <- FALSE
@@ -126,7 +126,7 @@ FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  param_local$meta$script <- "/exp/workflow-baseline/z541_FE_historia.r"
+  param_local$meta$script <- "/src/workflow-baseline/z541_FE_historia.r"
 
   param_local$lag1 <- TRUE
   param_local$lag2 <- FALSE # no me engraso con los lags de orden 2
@@ -178,7 +178,7 @@ TS_strategy_guantesblancos_202109 <- function( pmyexp, pinputexps, pserver="loca
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
-  param_local$meta$script <- "/exp/workflow-baseline/z551_TS_training_strategy.r"
+  param_local$meta$script <- "/src/workflow-baseline/z551_TS_training_strategy.r"
 
 
   param_local$future <- c(202109)
@@ -204,7 +204,7 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
-  param_local$meta$script <- "/exp/workflow-baseline/z551_TS_training_strategy.r"
+  param_local$meta$script <- "/src/workflow-baseline/z551_TS_training_strategy.r"
 
 
   param_local$future <- c(202107)
@@ -231,7 +231,7 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
-  param_local$meta$script <- "/exp/workflow-baseline/z561_HT_lightgbm.r"
+  param_local$meta$script <- "/src/workflow-baseline/z561_HT_lightgbm.r"
 
   # En caso que se haga cross validation, se usa esta cantidad de folds
   param_local$lgb_crossvalidation_folds <- 5
@@ -288,7 +288,7 @@ ZZ_final_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
-  param_local$meta$script <- "/exp/workflow-baseline/z571_ZZ_final.r"
+  param_local$meta$script <- "/src/workflow-baseline/z571_ZZ_final.r"
 
   # Que modelos quiero, segun su posicion en el ranking e la Bayesian Optimizacion, ordenado por ganancia descendente
   param_local$modelos_rank <- c(1)
