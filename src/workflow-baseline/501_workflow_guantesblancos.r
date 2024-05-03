@@ -14,7 +14,6 @@ require("ParamHelpers")
 envg <- env()
 
 envg$EXPENV <- list()
-envg$EXPENV$exp_num <- "0001"
 envg$EXPENV$exp_dir <- "~/buckets/b1/exp/"
 envg$EXPENV$wf_dir <- "~/buckets/b1/flow/"
 envg$EXPENV$wf_dir_local <- "~/flow/"
@@ -208,10 +207,9 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
 
 
   param_local$future <- c(202107)
-  param_local$final_train <- c(202105, 202104, 202103, 202102, 202101)
-
-
-  param_local$train$training <- c(202103, 202102, 202101, 202012, 202011)
+  param_local$final_train <- c(202105, 202104, 202103, 202102, 202101, 202012, 202011, 202010, 202009)
+  
+  param_local$train$training <- c(202103, 202102, 202101, 202012, 202011, 202010, 202009, 202008, 202007)
   param_local$train$validation <- c(202104)
   param_local$train$testing <- c(202105)
 
@@ -240,7 +238,7 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   #  los que tienen un solo valor son los que van fijos
   #  los que tienen un vector,  son los que participan de la Bayesian Optimization
   
-   param_local$lgb_param <- list(
+  param_local$lgb_param <- list(
     boosting = "gbdt", # puede ir  dart  , ni pruebe random_forest
     objective = "binary",
     metric = "custom",
@@ -274,7 +272,6 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
     num_leaves = c( 8L, 2048L,  "integer" ),
     min_data_in_leaf = c( 100L, 2000L, "integer" )
   )
-
 
 
   # una Beyesian de Guantes Blancos, solo hace 15 iteraciones
@@ -319,21 +316,21 @@ ZZ_final_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
-  
-  DT_incorporar_dataset_default( paste0("DT",envg$EXPENV$exp_num), "competencia_2024.csv.gz")
-  CA_catastrophe_default( paste0("CA",envg$EXPENV$exp_num), paste0("DT",envg$EXPENV$exp_num) )
-  
-  DR_drifting_guantesblancos( paste0("DR",envg$EXPENV$exp_num), paste0("CA",envg$EXPENV$exp_num) )
-  FE_historia_guantesblancos( paste0("FE",envg$EXPENV$exp_num), paste0("DR",envg$EXPENV$exp_num) )
-  
-  TS_strategy_guantesblancos_202109( paste0("TS",envg$EXPENV$exp_num), paste0("FE",envg$EXPENV$exp_num) )
-  
-  HT_tuning_guantesblancos( paste0("HT",envg$EXPENV$exp_num), paste0("TS",envg$EXPENV$exp_num) )
-  
+
+  DT_incorporar_dataset_default( "DT0001-e0001", "competencia_2024.csv.gz")
+  CA_catastrophe_default( "CA0001-e0001", "DT0001-e0001" )
+
+  DR_drifting_guantesblancos( "DR0001-e0001", "CA0001-e0001" )
+  FE_historia_guantesblancos( "FE0001-e0001", "DR0001-e0001" )
+
+  TS_strategy_guantesblancos_202109( "TS0001-e0001", "FE0001-e0001" )
+
+  HT_tuning_guantesblancos( "HT0001-e0001", "TS0001-e0001" )
+
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( paste0("ZZ",envg$EXPENV$exp_num), c(paste0("HT",envg$EXPENV$exp_num),paste0("TS",envg$EXPENV$exp_num)) )
-  
-  
+  ZZ_final_guantesblancos( "ZZ0001-e0001", c("HT0001-e0001","TS0001-e0001") )
+
+
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
 }
 #------------------------------------------------------------------------------
@@ -346,16 +343,16 @@ corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
 corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
-  
+
   # Ya tengo corrido FE0001 y parto de alli
-  TS_strategy_guantesblancos_202107( paste0("TS",envg$EXPENV$exp_num,"_2"), paste0("FE",envg$EXPENV$exp_num) )
-  
-  HT_tuning_guantesblancos( paste0("HT",envg$EXPENV$exp_num,"_2"), paste0("TS",envg$EXPENV$exp_num,"_2"))
-  
+  TS_strategy_guantesblancos_202107( "TS0002-e0001", "FE0001-e0001" )
+
+  HT_tuning_guantesblancos( "HT0002-e0001", "TS0002-e0001" )
+
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( paste0("ZZ",envg$EXPENV$exp_num,"_2"), c(paste0("HT",envg$EXPENV$exp_num,"_2"), paste0("TS",envg$EXPENV$exp_num,"_2")) )
-  
-  
+  ZZ_final_guantesblancos( "ZZ0002-e0001", c("HT0002-e0001", "TS0002-e0001") )
+
+
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
 }
 #------------------------------------------------------------------------------
@@ -365,12 +362,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 
 # Hago primero esta corrida que me genera los experimentos
 # DT0001, CA0001, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_guantesblancos_202109( paste0("gb",envg$EXPENV$exp_num,"_01") )
+corrida_guantesblancos_202109( "gb01-e0001" )
 
 
 # Luego partiendo de  FE0001
 # genero TS0002, HT0002 y ZZ0002
 
-# corrida_guantesblancos_202107( "gb02-e0001" )
+corrida_guantesblancos_202107( "gb02-e0001" )
 
  
