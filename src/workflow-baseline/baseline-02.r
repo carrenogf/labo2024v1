@@ -14,7 +14,7 @@ require("ParamHelpers")
 envg <- env()
 
 envg$EXPENV <- list()
-envg$EXPENV$exp_num <- "baseline-01"
+envg$EXPENV$exp_num <- "baseline-02"
 envg$EXPENV$exp_dir <- "~/buckets/b1/exp-baseline/"
 envg$EXPENV$wf_dir <- "~/buckets/b1/flow/"
 envg$EXPENV$wf_dir_local <- "~/flow/"
