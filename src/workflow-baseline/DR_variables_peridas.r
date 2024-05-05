@@ -477,10 +477,16 @@ fwrite(dataset,
   logical01 = TRUE,
   sep = ","
 )
+print("despues guardar el dataset")
+print(length(names(dataset)))
+
 
 # copia la metadata sin modificar
 write_yaml( PARAM$dataset_metadata, 
   file="dataset_metadata.yml" )
+
+print("despues de metadata sin modificar")
+print(length(names(dataset)))
 
 #------------------------------------------------------------------------------
 
@@ -502,11 +508,17 @@ fwrite(tb_campos,
   sep = "\t"
 )
 
+print("despues de guardar los campos")
+print(length(names(dataset)))
+
 #------------------------------------------------------------------------------
 OUTPUT$dataset$ncol <- ncol(dataset)
 OUTPUT$dataset$nrow <- nrow(dataset)
 OUTPUT$time$end <- format(Sys.time(), "%Y%m%d %H%M%S")
 GrabarOutput()
+
+print("despues del grabar output")
+print(length(names(dataset)))
 
 # dejo la marca final
 cat(format(Sys.time(), "%Y%m%d %H%M%S"), "\n",
