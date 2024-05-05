@@ -134,7 +134,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,p_saldo_ca := mcuentas_saldo/ccaja_ahorro]
   dataset[,p_saldo_ctas := mcuentas_saldo/(ccaja_ahorro + ccuenta_corriente)]
   dataset[,i_saldo_debito := mcuentas_saldo/ctarjeta_debito]
-  dataset[,i_consumo_payroll := (vmr_mconsumospesos + vmr_mconsumosdolares)/mpayroll]
+  dataset[,i_consumo_payroll := (vm_mconsumospesos + vm_mconsumosdolares)/mpayroll]
   dataset[, cliente_antiguedad_anios := ceiling(cliente_antiguedad / 12)]
   dataset[, b_fidelidad := cut(cliente_antiguedad_anios, breaks = c(0, 2, 6, Inf), labels = c(0, 1, 2), right = FALSE)]
   dataset[,i_fidelidad1 := cliente_antiguedad * cliente_edad]
