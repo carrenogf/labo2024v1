@@ -293,6 +293,12 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,c_transf_netas := ctransferencias_recibidas - ctransferencias_emitidas]
   dataset[,t_transf_netas := mtransferencias_recibidas - mtransferencias_emitidas]
   
+  print("despues de agregar las variables en la funcion")
+  dummys <- colnames(dataset)
+  dummys <- dummys[dummys %like% "^(d_)"]
+  print(length(dummys))
+  
+  
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
   infinitos <- lapply(
@@ -308,7 +314,12 @@ AgregarVariables_IntraMes <- function(dataset) {
     )
     dataset[mapply(is.infinite, dataset)] <- NA
   }
-
+  
+  print("despues de los infinitos en la funcion")
+  dummys <- colnames(dataset)
+  dummys <- dummys[dummys %like% "^(d_)"]
+  print(length(dummys))
+  
 
   # valvula de seguridad para evitar valores NaN  que es 0/0
   # paso los NaN a 0 , decision polemica si las hay
@@ -328,6 +339,10 @@ AgregarVariables_IntraMes <- function(dataset) {
     cat("Si no te gusta la decision, modifica a gusto el programa!\n\n")
     dataset[mapply(is.nan, dataset)] <- 0
   }
+  print("despues de los nan en la funcion")
+  dummys <- colnames(dataset)
+  dummys <- dummys[dummys %like% "^(d_)"]
+  print(length(dummys))
 }
 #------------------------------------------------------------------------------
 # deflaciona por IPC
@@ -435,6 +450,8 @@ print("#################################################################")
 print("antes de agregar las variables")
 print(length(names(dataset)))
 
+
+
 if (PARAM$variables_intrames) AgregarVariables_IntraMes(dataset)
 print("despues de agregar las variables")
 print(length(names(dataset)))
@@ -459,6 +476,10 @@ campos_monetarios <- campos_monetarios[campos_monetarios %like%
 
 print("antes swithc")
 print(length(names(dataset)))
+dummys <- colnames(dataset)
+dummys <- dummys[dummys %like% "^(d_)"]
+print(length(dummys))
+
 switch(PARAM$metodo,
   "ninguno"        = cat("No hay correccion del data drifting"),
   "rank_simple"    = drift_rank_simple(campos_monetarios),
@@ -469,6 +490,10 @@ switch(PARAM$metodo,
 
 print("despues del switch")
 print(length(names(dataset)))
+dummys <- colnames(dataset)
+dummys <- dummys[dummys %like% "^(d_)"]
+print(length(dummys))
+
 #------------------------------------------------------------------------------
 # grabo el dataset
 
