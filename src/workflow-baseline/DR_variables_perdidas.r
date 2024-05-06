@@ -293,11 +293,9 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,c_transf_netas := ctransferencias_recibidas - ctransferencias_emitidas]
   dataset[,t_transf_netas := mtransferencias_recibidas - mtransferencias_emitidas]
   
-  print("despues de agregar las variables en la funcion")
   dummys <- colnames(dataset)
   dummys <- dummys[dummys %like% "^(d_)"]
-  print(length(dummys))
-  
+  print(paste("nro dummys:", length(dummys)," al terminar de agregar las variables"))
   
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
@@ -314,11 +312,9 @@ AgregarVariables_IntraMes <- function(dataset) {
     )
     dataset[mapply(is.infinite, dataset)] <- NA
   }
-  
-  print("despues de los infinitos en la funcion")
   dummys <- colnames(dataset)
   dummys <- dummys[dummys %like% "^(d_)"]
-  print(length(dummys))
+  print(paste("nro dummys:", length(dummys)," luego de aplicar lo de los infinitos dentro de la función"))
   
 
   # valvula de seguridad para evitar valores NaN  que es 0/0
@@ -339,10 +335,9 @@ AgregarVariables_IntraMes <- function(dataset) {
     cat("Si no te gusta la decision, modifica a gusto el programa!\n\n")
     dataset[mapply(is.nan, dataset)] <- 0
   }
-  print("despues de los nan en la funcion")
   dummys <- colnames(dataset)
   dummys <- dummys[dummys %like% "^(d_)"]
-  print(length(dummys))
+  print(paste("nro dummys:", length(dummys)," luego de aplicar lo de los nan justo cuando termina la funcion"))
 }
 #------------------------------------------------------------------------------
 # deflaciona por IPC
@@ -447,20 +442,14 @@ write_yaml(PARAM, file = "parametros.yml") # escribo parametros utilizados
 # primero agrego las variables manuales
 print("*****************************************************************")
 print("#################################################################")
-print("antes de agregar las variables")
-print(length(names(dataset)))
-
-
-
+print("ejecuto la función AgregarVariables_IntraMes")
 if (PARAM$variables_intrames) AgregarVariables_IntraMes(dataset)
-print("despues de agregar las variables")
-print(length(names(dataset)))
+
+dummys <- colnames(dataset)
+dummys <- dummys[dummys %like% "^(d_)"]
+print(paste("nro dummys:", length(dummys)," al terminar la funcion AgregarVariables_IntraMes"))
 # ordeno dataset
-
-
 setorderv(dataset, PARAM$dataset_metadata$primarykey)
-print("setorderv")
-print(length(names(dataset)))
 
 
 # por como armé los nombres de campos,
@@ -474,12 +463,6 @@ campos_monetarios <- campos_monetarios[campos_monetarios %like%
 # aqui aplico un metodo para atacar el data drifting
 # hay que probar experimentalmente cual funciona mejor
 
-print("antes swithc")
-print(length(names(dataset)))
-dummys <- colnames(dataset)
-dummys <- dummys[dummys %like% "^(d_)"]
-print(length(dummys))
-
 switch(PARAM$metodo,
   "ninguno"        = cat("No hay correccion del data drifting"),
   "rank_simple"    = drift_rank_simple(campos_monetarios),
@@ -487,12 +470,6 @@ switch(PARAM$metodo,
   "deflacion"      = drift_deflacion(campos_monetarios),
   "estandarizar"   = drift_estandarizar(campos_monetarios)
 )
-
-print("despues del switch")
-print(length(names(dataset)))
-dummys <- colnames(dataset)
-dummys <- dummys[dummys %like% "^(d_)"]
-print(length(dummys))
 
 #------------------------------------------------------------------------------
 # grabo el dataset
@@ -502,16 +479,13 @@ fwrite(dataset,
   logical01 = TRUE,
   sep = ","
 )
-print("despues guardar el dataset")
-print(length(names(dataset)))
+
 
 
 # copia la metadata sin modificar
 write_yaml( PARAM$dataset_metadata, 
   file="dataset_metadata.yml" )
 
-print("despues de metadata sin modificar")
-print(length(names(dataset)))
 
 #------------------------------------------------------------------------------
 
