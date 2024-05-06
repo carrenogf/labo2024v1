@@ -227,8 +227,8 @@ dataset$p_ponderado_transeferencias <- ifelse(dataset$denominador != 0,
 
     ) > 0 ,1, 0)]  
   dataset[,t_montos := mrentabilidad+mrentabilidad_annual+mcomisiones+mactivos_margen+mpasivos_margen+mcuenta_corriente_adicional+mcuenta_corriente+mcaja_ahorro+mcaja_ahorro_adicional+mcaja_ahorro_dolares+mcuentas_saldo+mautoservicio+mtarjeta_visa_consumo+mtarjeta_master_consumo+mprestamos_personales+mprestamos_prendarios+mprestamos_hipotecarios+mplazo_fijo_dolares+mplazo_fijo_pesos+minversion1_pesos+minversion1_dolares+minversion2+mpayroll+mpayroll2+mcuenta_debitos_automaticos+mttarjeta_master_debitos_automaticos+mpagodeservicios+mpagomiscuentas+mcajeros_propios_descuentos+mtarjeta_visa_descuentos+mtarjeta_master_descuentos+mcomisiones_mantenimiento+mcomisiones_otras+mforex_buy+mforex_sell+mtransferencias_recibidas+mtransferencias_emitidas+mextraccion_autoservicio+mcheques_depositados+mcheques_emitidos+mcheques_depositados_rechazados+mcheques_emitidos_rechazados+matm+Master_mfinanciacion_limite+Master_msaldototal+Master_msaldopesos+Master_msaldodolares+Master_mconsumospesos+Master_mconsumosdolares+Master_mlimitecompra+Master_madelantopesos+Master_madelantodolares+Master_mpagado+Master_mpagospesos+Master_mpagosdolares+Master_mconsumototal+Master_mpagominimo]
-  dataset[,pond_montos := t_montos/sum(dataset$t_montos)]
-  dataset[,pond_rentabilidad := t_rentabilidad_mensual/sum(dataset$t_rentabilidad_mensual)]
+  #dataset[,pond_montos := t_montos/sum(dataset$t_montos)]
+  #dataset[,pond_rentabilidad := t_rentabilidad_mensual/sum(dataset$t_rentabilidad_mensual)]
   dataset[,d_rentabilidad_mensual_neg := ifelse( (t_rentabilidad_mensual) < 0 ,1, 0)]
   dataset[,d_i_liquidez_negativa := ifelse( (i_liquidez) < 0 ,1, 0)]
   dataset[,d_ca_negativa := ifelse( (mcaja_ahorro) > 0 ,1, 0)]
