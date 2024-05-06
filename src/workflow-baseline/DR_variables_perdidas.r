@@ -338,6 +338,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   dummys <- colnames(dataset)
   dummys <- dummys[dummys %like% "^(d_)"]
   print(paste("nro dummys:", length(dummys)," luego de aplicar lo de los nan justo cuando termina la funcion"))
+  return(dataset)
 }
 #------------------------------------------------------------------------------
 # deflaciona por IPC
@@ -443,7 +444,9 @@ write_yaml(PARAM, file = "parametros.yml") # escribo parametros utilizados
 print("*****************************************************************")
 print("#################################################################")
 print("ejecuto la función AgregarVariables_IntraMes")
-if (PARAM$variables_intrames) AgregarVariables_IntraMes(dataset)
+if (PARAM$variables_intrames){
+  dataset <- AgregarVariables_IntraMes(dataset)
+} 
 
 dummys <- colnames(dataset)
 dummys <- dummys[dummys %like% "^(d_)"]
